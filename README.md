@@ -9,6 +9,12 @@ This project simulates a real deployment pipeline end to end: every push to `mai
 🔗 https://cicd-pipeline-demo-production.up.railway.app/health
 
 ## Pipeline Overview
+
+```
+Push to GitHub → Lint (ESLint) → Test (Jest + Supertest) → Build (Docker → GHCR)
+→ Deploy (Railway, auto-triggered on push to main) → Notify (Slack webhook)
+```
+
 Every stage runs automatically. If lint or tests fail, the pipeline stops there — broken code never reaches the build or deploy stage.
 
 ## Tech Stack
@@ -38,6 +44,19 @@ docker run -p 3000:3000 cicd-demo
 ```
 
 Visit `http://localhost:3000/health` — you should see `{"healthy":true}`.
+
+## Use This as a Template
+
+This pipeline isn't tied to this specific app — the CI/CD structure is reusable for any Node.js project. To adapt it:
+
+1. **Fork this repo** (or copy `.github/workflows/ci.yml` and the `Dockerfile` into your own project)
+2. **Replace `server.js`** with your own app — keep the `/health` endpoint if you want the same health-check pattern
+3. **Update `package.json`** scripts (`start`, `test`, `lint`) to match your app's actual commands
+4. **Point deployment at your own Railway project** — connect your fork's GitHub repo in Railway, generate a new domain
+5. **Set your own `SLACK_WEBHOOK` secret** in your repo's Settings → Secrets and variables → Actions
+6. **Update the Docker image tags** in `ci.yml` if you want a different container registry
+
+That's it — push to `main` and the same lint → test → build → deploy → notify flow runs against your app instead.
 
 ## What I'd Add at Scale
 
