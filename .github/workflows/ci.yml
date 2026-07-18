@@ -46,7 +46,8 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ github.sha }},ghcr.io/${{ github.repository }}:latest
-notify:
+
+  notify:
     needs: build
     if: always()
     runs-on: ubuntu-latest
@@ -57,4 +58,4 @@ notify:
           payload: |
             {"text": "Pipeline ${{ job.status }} for cicd-pipeline-demo — commit ${{ github.sha }}"}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}          
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
